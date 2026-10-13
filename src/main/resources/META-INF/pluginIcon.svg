@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <!-- Graphite tile, a touch lighter at the top -->
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2d2d33"/>
+      <stop offset="1" stop-color="#1f1f24"/>
+    </linearGradient>
+    <!-- Powder drifts: powder pink to salmon -->
+    <linearGradient id="back" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c3b4e8"/>
+      <stop offset="1" stop-color="#d895b4"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0bfd3"/>
+      <stop offset="0.55" stop-color="#d895b4"/>
+      <stop offset="1" stop-color="#e3a08c"/>
+    </linearGradient>
+    <clipPath id="clip"><rect x="3" y="3" width="34" height="34" rx="10"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <rect x="3" y="3" width="34" height="34" fill="url(#tile)"/>
+    <!-- back drift -->
+    <path d="M3 27 C10 20 17 21 23 24 C28 26.5 33 22 37 21 V37 H3 Z" fill="url(#back)" opacity="0.55"/>
+    <!-- front drift -->
+    <path d="M3 31 C9 25.5 15 26 21 29 C27 32 32 28 37 27.5 V37 H3 Z" fill="url(#front)"/>
+    <!-- soft highlight on the front drift -->
+    <path d="M6 30 C10 27 14 27 18 28.6" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- powder in the air -->
+  <g fill="#f5f5f7">
+    <circle cx="12" cy="11" r="1.3"/>
+    <circle cx="27.5" cy="9" r="1"/>
+    <circle cx="20" cy="15.5" r="0.9" opacity="0.8"/>
+    <circle cx="31" cy="16" r="1.2" opacity="0.9"/>
+    <circle cx="9" cy="18.5" r="0.8" opacity="0.7"/>
+  </g>
+  <!-- one sparkle -->
+  <path d="M22 6.5 L22.8 9.2 L25.5 10 L22.8 10.8 L22 13.5 L21.2 10.8 L18.5 10 L21.2 9.2 Z" fill="#d895b4"/>
+
+  <rect x="3.5" y="3.5" width="33" height="33" rx="9.5" fill="none" stroke="#45454e" stroke-width="1"/>
+</svg>

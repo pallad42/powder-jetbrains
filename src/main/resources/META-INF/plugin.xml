@@ -1,0 +1,37 @@
+<idea-plugin>
+    <id>com.github.pallad42.powder</id>
+    <name>Powder</name>
+    <vendor url="https://github.com/pallad42/powder-jetbrains">pallad42</vendor>
+    <description><![CDATA[
+        <p>A calm dark theme for the Islands UI, inspired by Xcode: neutral graphite backgrounds, powder pink
+        keywords and soft pastel accents.</p>
+        <ul>
+            <li>The whole Islands Dark UI repainted in graphite, with a soft blue accent.</li>
+            <li>Quiet syntax colours: keywords, strings, numbers, function declarations, types and annotations are
+                coloured; calls, fields and variables stay plain text, so the code does not turn into confetti.</li>
+            <li>Terminal and console colours from the same palette.</li>
+            <li>Bitstream Vera Sans Mono 13.5 with line height 1.1 in the editor and the terminal; the font is
+                bundled. Applied once when the theme is first switched on - change it any time afterwards.</li>
+        </ul>
+        <p>Pairs well with <a href="https://github.com/pallad42/frost-jetbrains">Frost</a> for translucent,
+        blurred IDE windows.</p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <p><b>0.1.0</b> - first release.</p>
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends optional="true" config-file="powder-terminal.xml">org.jetbrains.plugins.terminal</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <themeProvider id="powder" path="/themes/Powder.theme.json"/>
+        <bundledColorScheme id="Powder" path="/themes/Powder.xml"/>
+        <notificationGroup id="Powder" displayType="BALLOON"/>
+    </extensions>
+
+    <applicationListeners>
+        <listener class="com.github.pallad42.powder.PowderAppListener" topic="com.intellij.ide.AppLifecycleListener"/>
+        <listener class="com.github.pallad42.powder.PowderThemeListener" topic="com.intellij.ide.ui.LafManagerListener"/>
+    </applicationListeners>
+</idea-plugin>
