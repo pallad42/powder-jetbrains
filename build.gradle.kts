@@ -103,12 +103,15 @@ tasks.withType<JavaExec>().matching { it.name.startsWith("runIde") }.configureEa
 }
 
 // ./gradlew runIdeWithFrost: a sandbox IDE with Frost (../frost, build it there first) installed next to the theme,
-// to see the theme translucent and blurred.
+// to see the theme translucent and blurred. Takes the newest Frost zip, whatever its version.
+val frostZip: File? = file("../frost/build/distributions").listFiles { f -> f.name.matches(Regex("frost-.*\\.zip")) }
+    ?.maxByOrNull { it.lastModified() }
+
 intellijPlatformTesting {
     runIde {
         register("runIdeWithFrost") {
             plugins {
-                localPlugin(file("../frost/build/distributions/frost-0.1.1.zip"))
+                frostZip?.let { localPlugin(it) }
             }
         }
     }

@@ -35,7 +35,8 @@
 - **The whole Islands UI in graphite.** Tool windows, editor, popups, toolbars and dialogs are repainted in neutral
   graphite greys, with a soft system blue as the accent.
 - **Quiet syntax colours.** Keywords, strings, numbers, function declarations, types and annotations are coloured;
-  calls, fields, variables and operators stay plain text. No bold, as in Xcode.
+  calls get a lighter powder blue, operators and punctuation are dimmed, fields and variables stay plain text. No
+  bold, as in Xcode.
 - **Every language.** The colours IntelliJ Dark gives to language-specific elements (Kotlin, Java, PHP, JavaScript,
   SQL, YAML, Markdown...) are translated by what they mean, so every language follows the same style.
 - **Terminal included.** Terminal and console colours come from the same palette.
@@ -60,11 +61,13 @@ The editor colour scheme switches to **Powder** together with the theme.
 | `#1f1f24` | editor, tool windows, terminal |
 | `#18181c` | window frame |
 | `#28282e` | popups |
-| `#d9d9de` | text, calls, fields, variables, operators |
+| `#d9d9de` | text, fields, variables |
 | `#d895b4` | keywords |
 | `#e3a08c` | strings |
 | `#d2c283` | numbers, constants |
 | `#8fb3c9` | function declarations, keys in JSON / YAML / properties |
+| `#b5c8d5` | function and method calls |
+| `#a5acb4` | operators, braces, commas, dots |
 | `#c3b4e8` | classes, types, HTML / XML tags |
 | `#c29a74` | annotations, PHP attributes |
 | `#6f7a85` | comments (italic) |
