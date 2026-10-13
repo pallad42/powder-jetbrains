@@ -2,8 +2,8 @@
 """Generates the Powder UI theme and editor colour scheme.
 
 A calm, Xcode-style dark theme: neutral graphite backgrounds, powder pink keywords, salmon strings, sand numbers,
-teal function declarations, lavender types - the colours of Xcode's Default (Dark), toned down. Calls, fields and
-operators stay plain text.
+teal function declarations, lavender types - the colours of Xcode's Default (Dark), toned down. Calls get a lighter
+teal, operators are dimmed, fields and variables stay plain text.
 
 The theme inherits from the bundled Islands Dark theme and repaints it: every named colour of Islands Dark
 (and of its parent, the new UI dark theme) is replaced with one of these, and so is every hard-coded colour the

@@ -8,7 +8,8 @@
         <ul>
             <li>The whole Islands Dark UI repainted in graphite, with a soft blue accent.</li>
             <li>Quiet syntax colours: keywords, strings, numbers, function declarations, types and annotations are
-                coloured; calls, fields and variables stay plain text, so the code does not turn into confetti.</li>
+                coloured; calls get a lighter powder blue, operators are dimmed, fields and variables stay plain text, so the
+                code does not turn into confetti.</li>
             <li>Terminal and console colours from the same palette.</li>
             <li>Bitstream Vera Sans Mono 13.5 with line height 1.1 in the editor and the terminal; the font is
                 bundled. Applied once when the theme is first switched on - change it any time afterwards.</li>
