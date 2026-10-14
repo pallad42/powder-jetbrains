@@ -34,11 +34,12 @@
 
 - **The whole Islands UI in graphite.** Tool windows, editor, popups, toolbars and dialogs are repainted in neutral
   graphite greys, with a soft system blue as the accent.
-- **Quiet syntax colours.** Keywords, strings, numbers, function declarations, types and annotations are coloured;
-  calls get a lighter powder blue, operators and punctuation are dimmed, fields and variables stay plain text. No
-  bold, as in Xcode.
-- **Every language.** The colours IntelliJ Dark gives to language-specific elements (Kotlin, Java, PHP, JavaScript,
-  SQL, YAML, Markdown...) are translated by what they mean, so every language follows the same style.
+- **Quiet syntax colours.** Keywords, strings, numbers, function declarations, types, annotations and fields are
+  coloured; calls get a lighter powder blue, static members are italic, operators and punctuation are dimmed,
+  variables and parameters stay plain text. No bold, as in Xcode.
+- **Every language.** As in Nord, Dracula or Catppuccin, the scheme sets the language defaults that every language
+  falls back to, plus explicit colours for about 1300 keys of the common languages (PHP, JavaScript, TypeScript, Java,
+  Kotlin, Dart, SQL, Python, Go, Ruby, CSS, HTML...), so none of them is left with a Darcula colour.
 - **Terminal included.** Terminal and console colours come from the same palette.
 - **Bundled font.** Bitstream Vera Sans Mono 13.5 with line height 1.1, applied once when you switch the theme on.
 - **Pairs with [Frost](https://github.com/pallad42/frost-jetbrains)** for translucent, blurred IDE windows.
@@ -61,15 +62,16 @@ The editor colour scheme switches to **Powder** together with the theme.
 | `#1f1f24` | editor, tool windows, terminal |
 | `#18181c` | window frame |
 | `#28282e` | popups |
-| `#d9d9de` | text, fields, variables |
+| `#d9d9de` | text, variables, parameters |
 | `#d895b4` | keywords |
 | `#e3a08c` | strings |
 | `#d2c283` | numbers, constants |
-| `#8fb3c9` | function declarations, keys in JSON / YAML / properties |
+| `#8fb3c9` | function declarations, keys in JSON / YAML / CSS, HTML / XML attributes |
 | `#b5c8d5` | function and method calls |
 | `#a5acb4` | operators, braces, commas, dots |
 | `#c3b4e8` | classes, types, HTML / XML tags |
 | `#c29a74` | annotations, PHP attributes |
+| `#a5cdb9` | fields and properties |
 | `#6f7a85` | comments (italic) |
 | `#6aa6e8` | UI accent, links |
 | `#414a5c` | selection |
@@ -132,7 +134,8 @@ Builds against the IntelliJ IDEA at `ideaPath` in `gradle.properties` when it ex
 ### Changing the colours
 
 The theme (`src/main/resources/themes/Powder.theme.json`) and the colour scheme (`Powder.xml`) are generated -
-edit the palette and the syntax rules in `scripts/generate_theme.py` and run:
+edit the palette and the syntax rules in `scripts/generate_theme.py` (the language keys and their roles are in
+`scripts/language_keys.tsv`) and run:
 
 ```
 python3 scripts/generate_theme.py ["/Applications/IntelliJ IDEA.app"]
