@@ -3,13 +3,15 @@
 
 A calm, Xcode-style dark theme: neutral graphite backgrounds, powder pink keywords, salmon strings, sand numbers,
 teal function declarations, lavender types - the colours of Xcode's Default (Dark), toned down. Calls get a lighter
-teal, operators are dimmed, fields and variables stay plain text.
+teal, fields and properties mint, operators are dimmed, variables and parameters stay plain text.
 
 The theme inherits from the bundled Islands Dark theme and repaints it: every named colour of Islands Dark
 (and of its parent, the new UI dark theme) is replaced with one of these, and so is every hard-coded colour the
 parents use. The editor scheme starts from Darcula + Islands Dark (plus the Darcula additions of bundled plugins);
-their syntax colours are translated by meaning (SYNTAX_COLORS: keywords pink, strings salmon, functions teal...),
-and the theme's own syntax highlighting (SYNTAX) goes on top.
+their syntax colours are translated by meaning (SYNTAX_COLORS: keywords pink, strings salmon, functions teal...).
+On top go, as in the big open-source themes (Nord, Dracula, Catppuccin), explicit colours: the language-defaults
+(DEFAULT_*) that every language falls back to, and the keys of the common languages (language_keys.tsv, each with a
+role from ROLES), so none of them shows a Darcula colour. The theme's own highlighting (SYNTAX) comes last.
 
 The base files are read from an installed IntelliJ IDEA, so after an IDE update simply run it again:
 
@@ -17,6 +19,7 @@ The base files are read from an installed IntelliJ IDEA, so after an IDE update 
 """
 
 import colorsys
+import copy
 import json
 import re
 import sys
@@ -62,6 +65,7 @@ CALL = "#b5c8d5"  # function and method calls: a lighter powder blue
 PUNCTUATION = "#a5acb4"  # operators, braces, commas, dots: dimmed so the names stand out
 LAVENDER = "#c3b4e8"  # classes and types
 BRONZE = "#c29a74"  # annotations
+MINT = "#a5cdb9"  # fields and properties
 
 # Status and UI colours (errors, warnings, VCS, accents).
 RED = "#e5848c"
@@ -155,7 +159,7 @@ ACCENT_PATHS = {a: accent_path(a) for a in ACCENTS}
 # Every colour the theme is built from; repainted colours within SNAP units of one are snapped onto it.
 PALETTE = sorted({c.lower() for c in [FRAME, BG_DIM, BG0, BG1, BG2, BG3, BG4, BG5, BG_VISUAL, LIST_SELECTION,
                                       CURRENT_LINE, FG, GREY0, GREY1, GREY2, WHITE, PINK, SALMON, SAND, TEAL, CALL,
-                                      PUNCTUATION, LAVENDER, BRONZE, RED, GREEN, BLUE]
+                                      PUNCTUATION, LAVENDER, BRONZE, MINT, RED, GREEN, BLUE]
                   + list(GRAYS.values()) + [c for r in RAMPS.values() for c in r.values()]})
 SNAP = 4
 # Foregrounds repainted from the parents are lifted to at least this contrast on their background (WCAG's minimum
@@ -467,8 +471,8 @@ BOLD, ITALIC, BOLD_ITALIC = 1, 2, 3
 UNDERLINE, WAVE, STRIKEOUT, BOX = 1, 2, 3, 5
 
 # Xcode's Default (Dark) syntax colours, toned down: keywords, strings, values, function declarations, types,
-# annotations and comments are coloured, calls get a lighter teal; fields and variables stay plain text and
-# punctuation is dimmed. No bold, as in Xcode.
+# annotations, fields and comments are coloured, calls get a lighter teal, static members are italic; variables and
+# parameters stay plain text and punctuation is dimmed. No bold, as in Xcode.
 SYNTAX = {
     "TEXT": attr(FG, BG_DIM),
     "DEFAULT_IDENTIFIER": attr(FG),
@@ -478,7 +482,7 @@ SYNTAX = {
     "DEFAULT_INVALID_STRING_ESCAPE": attr(RED, effect=WAVE, effect_color=RED),
     "DEFAULT_NUMBER": attr(SAND),
     "DEFAULT_CONSTANT": attr(SAND),
-    "DEFAULT_PREDEFINED_SYMBOL": attr(PINK),
+    "DEFAULT_PREDEFINED_SYMBOL": attr(CALL),
     "DEFAULT_LINE_COMMENT": attr(GREY1, font=ITALIC),
     "DEFAULT_BLOCK_COMMENT": attr(GREY1, font=ITALIC),
     "DEFAULT_DOC_COMMENT": attr(GREY1, font=ITALIC),
@@ -488,9 +492,9 @@ SYNTAX = {
     "DEFAULT_FUNCTION_DECLARATION": attr(TEAL),
     "DEFAULT_FUNCTION_CALL": attr(CALL),
     "DEFAULT_INSTANCE_METHOD": attr(CALL),
-    "DEFAULT_STATIC_METHOD": attr(CALL),
-    "DEFAULT_INSTANCE_FIELD": attr(FG),
-    "DEFAULT_STATIC_FIELD": attr(FG),
+    "DEFAULT_STATIC_METHOD": attr(CALL, font=ITALIC),
+    "DEFAULT_INSTANCE_FIELD": attr(MINT),
+    "DEFAULT_STATIC_FIELD": attr(MINT, font=ITALIC),
     "DEFAULT_CLASS_NAME": attr(LAVENDER),
     "DEFAULT_CLASS_REFERENCE": attr(LAVENDER),
     "DEFAULT_INTERFACE_NAME": attr(LAVENDER),
@@ -498,7 +502,9 @@ SYNTAX = {
     "TS.TYPE_PARAMETER": attr(LAVENDER),
     "DEFAULT_LOCAL_VARIABLE": attr(FG),
     "DEFAULT_PARAMETER": attr(FG),
-    "DEFAULT_GLOBAL_VARIABLE": attr(FG),
+    "DEFAULT_REASSIGNED_LOCAL_VARIABLE": attr(FG),
+    "DEFAULT_REASSIGNED_PARAMETER": attr(FG),
+    "DEFAULT_GLOBAL_VARIABLE": attr(FG, font=ITALIC),
     "DEFAULT_OPERATION_SIGN": attr(PUNCTUATION),
     "DEFAULT_BRACES": attr(PUNCTUATION),
     "DEFAULT_BRACKETS": attr(PUNCTUATION),
@@ -508,23 +514,25 @@ SYNTAX = {
     "DEFAULT_DOT": attr(PUNCTUATION),
     "DEFAULT_METADATA": attr(BRONZE),
     "ANNOTATION_NAME_ATTRIBUTES": attr(BRONZE),
-    "DEFAULT_LABEL": attr(FG),
+    "DEFAULT_LABEL": attr(PINK),
     "DEFAULT_TAG": attr(LAVENDER),
-    "DEFAULT_ATTRIBUTE": attr(FG),
+    "DEFAULT_ATTRIBUTE": attr(TEAL),
     "DEFAULT_ENTITY": attr(SAND),
-    "DEFAULT_TEMPLATE_LANGUAGE_COLOR": attr(FG, BG0),
+    # No background behind the code of template languages (PHP in HTML, Twig, JSP...): it only covers the text, not
+    # whole lines, and leaves patches.
+    "DEFAULT_TEMPLATE_LANGUAGE_COLOR": attr(),
     "HTML_TAG_NAME": attr(LAVENDER),
     "HTML_CUSTOM_TAG_NAME": attr(LAVENDER),
-    "HTML_ATTRIBUTE_NAME": attr(FG),
+    "HTML_ATTRIBUTE_NAME": attr(TEAL),
     "HTML_ATTRIBUTE_VALUE": attr(SALMON),
     "HTML_ENTITY_REFERENCE": attr(SAND),
     "XML_TAG_NAME": attr(LAVENDER),
     "XML_CUSTOM_TAG_NAME": attr(LAVENDER),
-    "XML_ATTRIBUTE_NAME": attr(FG),
+    "XML_ATTRIBUTE_NAME": attr(TEAL),
     "XML_ATTRIBUTE_VALUE": attr(SALMON),
     "XML_ENTITY_REFERENCE": attr(SAND),
     "XML_PROLOGUE": attr(GREY1),
-    "CSS.PROPERTY_NAME": attr(FG),
+    "CSS.PROPERTY_NAME": attr(TEAL),
     "CSS.PROPERTY_VALUE": attr(SALMON),
     "CSS.IDENT": attr(FG),
     "CSS.COLOR": attr(SAND),
@@ -592,6 +600,51 @@ for name, color in ANSI:
 for i, name in enumerate(BLOCK_TERMINAL):
     SYNTAX[f"BLOCK_TERMINAL_{name}"] = attr(ANSI[i][1], ANSI[i][1])
     SYNTAX[f"BLOCK_TERMINAL_{name}_BRIGHT"] = attr(ANSI[i + 8][1], ANSI[i + 8][1])
+
+# What each role of language_keys.tsv looks like: the same colours as the matching DEFAULT_* keys above.
+ROLES = {
+    "keyword": attr(PINK),
+    "this": attr(PINK),  # this, self, $this
+    "label": attr(PINK),  # labels, heredoc markers
+    "interpolation": attr(PINK),  # ${ } in strings
+    "string": attr(SALMON),
+    "regex": attr(SALMON),
+    "escape": attr(SAND),
+    "number": attr(SAND),
+    "constant": attr(SAND),
+    "color": attr(SAND),
+    "entity": attr(SAND),
+    "comment": attr(GREY1, font=ITALIC),
+    "doc_tag": attr(GREY2, font=ITALIC),
+    "doc_markup": attr(GREY2),
+    "func_decl": attr(TEAL),
+    "call": attr(CALL),
+    "builtin_call": attr(CALL),
+    "static_call": attr(CALL, font=ITALIC),
+    "constructor_call": attr(LAVENDER),
+    "type": attr(LAVENDER),
+    "tag": attr(LAVENDER),
+    "anchor": attr(LAVENDER),
+    "annotation": attr(BRONZE),
+    "field": attr(MINT),
+    "static_field": attr(MINT, font=ITALIC),
+    "global": attr(FG, font=ITALIC),
+    "parameter": attr(FG),
+    "plain": attr(FG),
+    "key": attr(TEAL),  # keys in JSON / YAML / CSS properties
+    "markup_attr": attr(TEAL),  # HTML / XML attributes
+    "punct": attr(PUNCTUATION),
+    "link": attr(BLUE),
+    "bad": attr(RED, effect=WAVE, effect_color=RED),
+    "nobg": attr(),  # template code backgrounds, see DEFAULT_TEMPLATE_LANGUAGE_COLOR
+}
+
+
+def language_keys():
+    rows = (line.split("\t") for line in (ROOT / "scripts/language_keys.tsv").read_text().splitlines()
+            if line and not line.startswith("#"))
+    return {key: copy.deepcopy(ROLES[role]) for key, role in rows}
+
 
 COLORS = {
     "CARET_COLOR": WHITE,
@@ -689,7 +742,7 @@ def build_scheme():
 
     for name, value in COLORS.items():
         colors[name] = ET.Element("option", name=name, value=bare(value) if value else "")
-    for name, value in SYNTAX.items():
+    for name, value in {**language_keys(), **SYNTAX}.items():
         el = ET.Element("option", name=name)
         el.append(value)
         attributes[name] = el
