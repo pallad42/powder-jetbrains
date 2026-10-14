@@ -24,11 +24,9 @@
   <img src="https://img.shields.io/badge/status-early%20access-orange" alt="Early access">
 </p>
 
-<!-- Screenshot goes here:
 <p align="center">
-  <img src="docs/powder-editor.png" width="900" alt="JetBrains IDE with the Powder theme">
+  <img src="docs/powder-editor.png" width="900" alt="JetBrains IDE with the Powder theme: graphite Islands UI, Kotlin code with powder pink keywords and pastel accents, a documentation popup and the terminal">
 </p>
--->
 
 ## Features
 
