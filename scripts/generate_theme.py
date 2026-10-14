@@ -9,9 +9,11 @@ The theme inherits from the bundled Islands Dark theme and repaints it: every na
 (and of its parent, the new UI dark theme) is replaced with one of these, and so is every hard-coded colour the
 parents use. The editor scheme starts from Darcula + Islands Dark (plus the Darcula additions of bundled plugins);
 their syntax colours are translated by meaning (SYNTAX_COLORS: keywords pink, strings salmon, functions teal...).
-On top go, as in the big open-source themes (Nord, Dracula, Catppuccin), explicit colours: the language-defaults
-(DEFAULT_*) that every language falls back to, and the keys of the common languages (language_keys.tsv, each with a
-role from ROLES), so none of them shows a Darcula colour. The theme's own highlighting (SYNTAX) comes last.
+On top go the language defaults (DEFAULT_*): every language key that has a fallback key (fallback_keys.tsv) is
+marked as inherited and ends up there, so all languages follow them - also those of plugins that colour Darcula
+their own way, such as PHP. Only the keys that would not (no fallback key, or one that looks wrong here) get a colour
+of their own, from language_keys.tsv and ROLES; the theme's own highlighting (SYNTAX) comes last. read_language_keys.py
+refreshes fallback_keys.tsv and lists the keys that still need a role.
 
 The base files are read from an installed IntelliJ IDEA, so after an IDE update simply run it again:
 
@@ -641,9 +643,17 @@ ROLES = {
 
 
 def language_keys():
+    """language_keys.tsv as {key: value}; None for the keys to leave to their fallback ("inherit")."""
     rows = (line.split("\t") for line in (ROOT / "scripts/language_keys.tsv").read_text().splitlines()
             if line and not line.startswith("#"))
-    return {key: copy.deepcopy(ROLES[role]) for key, role in rows}
+    return {key: None if role == "inherit" else copy.deepcopy(ROLES[role]) for key, role in rows}
+
+
+def fallback_keys():
+    """fallback_keys.tsv as {key: fallback}."""
+    rows = (line.split("\t") for line in (ROOT / "scripts/fallback_keys.tsv").read_text().splitlines()
+            if line and not line.startswith("#"))
+    return dict(rows)
 
 
 COLORS = {
@@ -703,6 +713,32 @@ COLORS = {
 }
 
 
+def darcula_additions(roots):
+    """The colour files plugins add to Darcula (additionalTextAttributes), each root being one plugin."""
+    for root in roots:
+        plugin_jars = sorted(root.rglob("*.jar")) if root.is_dir() else []
+        files = set()
+        for jar in plugin_jars:
+            try:
+                with zipfile.ZipFile(jar) as z:
+                    # Some are registered in code rather than plugin.xml; these follow the naming convention.
+                    files.update(n for n in z.namelist() if re.fullmatch(r"colorSchemes/[^/]*Darcula\.xml", n))
+                    for n in z.namelist():
+                        if n.endswith(".xml") and n.count("/") <= 2:
+                            for m in re.finditer(r"<additionalTextAttributes\b[^>]*>", z.read(n).decode("utf-8", "ignore")):
+                                if 'scheme="Darcula"' in m.group(0) and (f := re.search(r'file="/?([^"]+)"', m.group(0))):
+                                    files.add(f.group(1))
+            except zipfile.BadZipFile:
+                pass
+        for jar in plugin_jars:
+            try:
+                with zipfile.ZipFile(jar) as z:
+                    for f in sorted(files & set(z.namelist())):
+                        yield ET.fromstring(z.read(f))
+            except zipfile.BadZipFile:
+                pass
+
+
 def build_scheme():
     impl = LIB / "intellij.platform.ide.impl.jar"
     defaults = ET.fromstring(read_resource(impl, "DefaultColorSchemesManager.xml"))
@@ -721,14 +757,8 @@ def build_scheme():
 
     take(darcula.find("colors"), darcula.find("attributes"))
     # What bundled plugins add to Darcula (JavaScript, SQL, Markdown, YAML...).
-    for jar in sorted(list(LIB.glob("*.jar")) + list((IDE / "Contents/plugins").glob("*/lib/**/*.jar"))):
-        try:
-            with zipfile.ZipFile(jar) as z:
-                names = [n for n in z.namelist() if re.fullmatch(r"colorSchemes/[^/]*Darcula\.xml", n)]
-                for n in names:
-                    take(None, ET.fromstring(z.read(n)))
-        except zipfile.BadZipFile:
-            pass
+    for attrs in darcula_additions([LIB, *sorted((IDE / "Contents/plugins").iterdir())]):
+        take(None, attrs)
     take(islands.find("colors"), islands.find("attributes"))
 
     for o in colors.values():
@@ -742,7 +772,19 @@ def build_scheme():
 
     for name, value in COLORS.items():
         colors[name] = ET.Element("option", name=name, value=bare(value) if value else "")
+    # A key the scheme leaves out is not left to its fallback: the IDE fills it in from Darcula, including what
+    # plugins add to Darcula (PHP colours its variables purple there). Marked as inherited, it follows its fallback.
+    fallbacks = fallback_keys()
+    for name, fallback in fallbacks.items():
+        if name not in attributes:
+            attributes[name] = ET.Element("option", name=name, baseAttributes=fallback)
     for name, value in {**language_keys(), **SYNTAX}.items():
+        if value is None:
+            if name in fallbacks:
+                attributes[name] = ET.Element("option", name=name, baseAttributes=fallbacks[name])
+            else:
+                attributes.pop(name, None)
+            continue
         el = ET.Element("option", name=name)
         el.append(value)
         attributes[name] = el

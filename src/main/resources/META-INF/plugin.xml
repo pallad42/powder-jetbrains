@@ -10,8 +10,8 @@
             <li>Quiet syntax colours: keywords, strings, numbers, function declarations, types, annotations and fields
                 are coloured; calls get a lighter powder blue, operators are dimmed, variables and parameters stay plain
                 text, so the code does not turn into confetti.</li>
-            <li>Every language: the language defaults plus explicit colours for the common languages (PHP, JavaScript,
-                TypeScript, Java, Kotlin, Dart, SQL, Python, Go, Ruby...).</li>
+            <li>Every language follows the same style: the scheme colours the language defaults that PHP, JavaScript,
+                TypeScript, Java, Kotlin, Dart, SQL, Python, Go, Ruby and the rest fall back to.</li>
             <li>Terminal and console colours from the same palette.</li>
             <li>Bitstream Vera Sans Mono 13.5 with line height 1.1 in the editor and the terminal; the font is
                 bundled. Applied once when the theme is first switched on - change it any time afterwards.</li>

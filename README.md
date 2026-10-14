@@ -37,9 +37,10 @@
 - **Quiet syntax colours.** Keywords, strings, numbers, function declarations, types, annotations and fields are
   coloured; calls get a lighter powder blue, static members are italic, operators and punctuation are dimmed,
   variables and parameters stay plain text. No bold, as in Xcode.
-- **Every language.** As in Nord, Dracula or Catppuccin, the scheme sets the language defaults that every language
-  falls back to, plus explicit colours for about 1300 keys of the common languages (PHP, JavaScript, TypeScript, Java,
-  Kotlin, Dart, SQL, Python, Go, Ruby, CSS, HTML...), so none of them is left with a Darcula colour.
+- **Every language.** The scheme colours the language defaults, which every language (PHP, JavaScript, TypeScript,
+  Java, Kotlin, Dart, SQL, Python, Go, Ruby, CSS, HTML...) falls back to, so they all follow the same style - and your
+  own changes to Language Defaults reach them too. Only the few elements that do not fall back get a colour of their
+  own.
 - **Terminal included.** Terminal and console colours come from the same palette.
 - **Bundled font.** Bitstream Vera Sans Mono 13.5 with line height 1.1, applied once when you switch the theme on.
 - **Pairs with [Frost](https://github.com/pallad42/frost-jetbrains)** for translucent, blurred IDE windows.
@@ -143,6 +144,16 @@ python3 scripts/generate_theme.py ["/Applications/IntelliJ IDEA.app"]
 
 The script reads the bundled Islands Dark theme, IntelliJ Dark and Darcula colour schemes and the colour additions of
 bundled plugins from an installed IntelliJ IDEA and repaints them, so run it again after an IDE update.
+
+The language keys every language falls back from are listed in `scripts/fallback_keys.tsv`. After an IDE update, or
+to cover another language plugin (installed, or a zip downloaded from JetBrains Marketplace), refresh the list and
+then run `generate_theme.py` again:
+
+```
+python3 scripts/read_language_keys.py ["/Applications/IntelliJ IDEA.app"] [plugin.zip ...]
+```
+
+It needs `javap` from a JDK, and lists any keys that still need a role in `language_keys.tsv`.
 
 ### Releasing
 
