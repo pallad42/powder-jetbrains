@@ -32,6 +32,10 @@
 
 ## Features
 
+<!-- Plugin description -->
+A calm dark theme for the Islands UI, inspired by Xcode: neutral graphite backgrounds, powder pink keywords and soft
+pastel accents.
+
 - **The whole Islands UI in graphite.** Tool windows, editor, popups, toolbars and dialogs are repainted in neutral
   graphite greys, with a soft system blue as the accent.
 - **Quiet syntax colours.** Keywords, strings, numbers, function declarations, types, annotations and fields are
@@ -42,8 +46,10 @@
   own changes to Language Defaults reach them too. Only the few elements that do not fall back get a colour of their
   own.
 - **Terminal included.** Terminal and console colours come from the same palette.
-- **Bundled font.** Bitstream Vera Sans Mono 13.5 with line height 1.1, applied once when you switch the theme on.
+- **Bundled font.** Bitstream Vera Sans Mono 13.5 with line height 1.1, applied once when you switch the theme
+  on - change it any time afterwards.
 - **Pairs with [Frost](https://github.com/pallad42/frost-jetbrains)** for translucent, blurred IDE windows.
+<!-- Plugin description end -->
 
 ## Install
 
@@ -157,7 +163,8 @@ It needs `javap` from a JDK, and lists any keys that still need a role in `langu
 
 ### Releasing
 
-1. Bump `version` in `build.gradle.kts` and the change notes in `plugin.xml`, push.
+1. Bump `version` in `build.gradle.kts` and the change notes in `plugin.xml`, push. The Marketplace description is
+   built from the part of this README between the `Plugin description` markers.
 2. Publish a GitHub release tagged `v<version>`. CI builds and verifies the plugin, attaches the zip to the release
    and uploads it to JetBrains Marketplace (needs the `PUBLISH_TOKEN` repository secret).
 
