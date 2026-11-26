@@ -11,7 +11,7 @@ import com.intellij.openapi.editor.colors.impl.AppEditorFontOptions
 
 /**
  * The first time the theme is switched on, sets its font in the editor (Settings | Editor | Font: a colour scheme
- * only stores whole font sizes) and the terminal, and stops the terminal adjusting the ANSI colours for contrast.
+ * only stores whole font sizes) and stops the terminal adjusting the ANSI colours for contrast.
  * Done once only, so whatever the user changes afterwards stays.
  */
 object FontDefaults {
@@ -27,7 +27,8 @@ object FontDefaults {
         if (theme != THEME_ID || properties.getBoolean(APPLIED_KEY)) return
         properties.setValue(APPLIED_KEY, true)
 
-        // AppEditorFontOptions is internal API too: if it changes, the theme still works, only the font is not set.
+        // AppEditorFontOptions is an impl class (not marked internal): if it changes, the theme still works, only the
+        // font is not set.
         try {
             AppEditorFontOptions.getInstance().update(PowderFonts.preferences())
             // update() only stores the font; re-setting the scheme makes open editors pick it up.
@@ -54,9 +55,9 @@ object FontDefaults {
 
         val content = buildString {
             append("${PowderFonts.FAMILY} ${PowderFonts.SIZE}, line height ${PowderFonts.LINE_SPACING} in the editor")
-            append(if (terminal) " and the terminal; terminal colours are no longer adjusted for contrast." else ".")
-            append("<br>Change them any time in Settings | Editor | Font")
-            if (terminal) append(" and Settings | Tools | Terminal")
+            append(if (terminal) "; terminal colours are no longer adjusted for contrast." else ".")
+            append("<br>Change it any time in Settings | Editor | Font")
+            if (terminal) append("; for the same font in the terminal, set it in Settings | Tools | Terminal")
             append(".")
         }
         NotificationGroupManager.getInstance().getNotificationGroup("Powder")

@@ -55,11 +55,12 @@ intellijPlatform {
         ides {
             current()
         }
-        // TerminalDefaults sets the terminal font through the terminal plugin's internal font settings service
-        // (there is no public API for it); it is guarded and reported, so internal API usage alone does not fail.
+        // Internal API fails the build: JetBrains Marketplace rejects plugins that use it. Experimental API does not:
+        // TerminalDefaults switches off the terminal's contrast adjustment through it, guarded and reported.
         failureLevel = listOf(
             VerifyPluginTask.FailureLevel.COMPATIBILITY_PROBLEMS,
             VerifyPluginTask.FailureLevel.INVALID_PLUGIN,
+            VerifyPluginTask.FailureLevel.INTERNAL_API_USAGES,
             VerifyPluginTask.FailureLevel.SCHEDULED_FOR_REMOVAL_API_USAGES,
             VerifyPluginTask.FailureLevel.NON_EXTENDABLE_API_USAGES,
             VerifyPluginTask.FailureLevel.OVERRIDE_ONLY_API_USAGES,

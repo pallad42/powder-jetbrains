@@ -44,8 +44,8 @@ pastel accents.
   own changes to Language Defaults reach them too. Only the few elements that do not fall back get a colour of their
   own.
 - **Terminal included.** Terminal and console colours come from the same palette.
-- **Bundled font.** Bitstream Vera Sans Mono 13.5 with line height 1.1, applied once when you switch the theme
-  on - change it any time afterwards.
+- **Bundled font.** Bitstream Vera Sans Mono 13.5 with line height 1.1, applied to the editor once when you switch
+  the theme on - change it any time afterwards.
 - **Pairs with [Frost](https://github.com/pallad42/frost-jetbrains)** for translucent, blurred IDE windows.
 <!-- Plugin description end -->
 
@@ -83,24 +83,24 @@ The editor colour scheme switches to **Powder** together with the theme.
 
 ## Font
 
-Powder comes with **Bitstream Vera Sans Mono**. The first time you switch the theme on, it sets:
-
-| Where | Font | Size | Line height |
-|---|---|---|---|
-| Editor (<kbd>Settings</kbd> → <kbd>Editor</kbd> → <kbd>Font</kbd>) | Bitstream Vera Sans Mono | 13.5 | 1.1 |
-| Terminal (<kbd>Settings</kbd> → <kbd>Tools</kbd> → <kbd>Terminal</kbd>) | Bitstream Vera Sans Mono | 13.5 | 1.1 |
+Powder comes with **Bitstream Vera Sans Mono**. The first time you switch the theme on, it sets it in the editor
+(<kbd>Settings</kbd> → <kbd>Editor</kbd> → <kbd>Font</kbd>): size 13.5, line height 1.1.
 
 It also turns off the terminal's minimum contrast adjustment, so the terminal shows the palette's colours as they
 are. This happens **only once**: change any of it afterwards and Powder leaves it alone.
+
+The terminal keeps its own font: for the same look, pick Bitstream Vera Sans Mono, 13.5, line height 1.1 in
+<kbd>Settings</kbd> → <kbd>Tools</kbd> → <kbd>Terminal</kbd>. The IDE has no public API for setting it, so Powder
+does not.
 
 ## FAQ
 
 <details>
 <summary><b>I switched the theme but the font did not change.</b></summary>
 
-The font is applied only the first time Powder is switched on. If you had used the theme before, set it yourself in
-<kbd>Settings</kbd> → <kbd>Editor</kbd> → <kbd>Font</kbd> and <kbd>Settings</kbd> → <kbd>Tools</kbd> →
-<kbd>Terminal</kbd>.
+The font is applied to the editor only the first time Powder is switched on. If you had used the theme before, set
+it yourself in <kbd>Settings</kbd> → <kbd>Editor</kbd> → <kbd>Font</kbd>. The terminal's font is always yours to set,
+in <kbd>Settings</kbd> → <kbd>Tools</kbd> → <kbd>Terminal</kbd>.
 </details>
 
 <details>
@@ -113,14 +113,6 @@ Yes. Pick any font afterwards - the theme and the colour scheme do not depend on
 <summary><b>How do I get translucent, blurred windows?</b></summary>
 
 Install [Frost](https://github.com/pallad42/frost-jetbrains) next to Powder (macOS only for now).
-</details>
-
-<details>
-<summary><b>Why does the plugin use internal IntelliJ API?</b></summary>
-
-There is no public API to set the editor's fractional font size or the terminal's font. Powder only uses it once,
-when the theme is first switched on, and guards the call: if a future IDE changes it, the theme still works, only
-the font is not set automatically.
 </details>
 
 ## Build
